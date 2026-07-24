@@ -283,7 +283,137 @@
   #define SPINDLE_PWM_BIT   5 // MEGA2560 Digital Pin 8 
 
 #endif
-/* 
+
+#ifdef CPU_MAP_2560_CNC_SHIELD
+  #include "nuts_bolts.h"
+
+  #define SERIAL_RX USART0_RX_vect
+  #define SERIAL_UDRE USART0_UDRE_vect
+
+  #define DDR(port) DDR##port
+  #define _DDR(port) DDR(port)
+  #define PORT(port) PORT##port
+  #define _PORT(port) PORT(port)
+  #define PIN(pin) PIN##pin
+  #define _PIN(pin) PIN(pin)
+
+  #define STEP_PORT_0 E
+  #define STEP_PORT_1 E
+  #define STEP_PORT_2 G
+  #define STEP_BIT_0 4
+  #define STEP_BIT_1 5
+  #define STEP_BIT_2 5
+  #define _STEP_BIT(i) STEP_BIT_##i
+  #define STEP_BIT(i) _STEP_BIT(i)
+  #define STEP_DDR(i) _DDR(STEP_PORT_##i)
+  #define _STEP_PORT(i) _PORT(STEP_PORT_##i)
+  #define STEP_PORT(i) _STEP_PORT(i)
+  #define STEP_PIN(i) _PIN(STEP_PORT_##i)
+
+  #define DIRECTION_PORT_0 E
+  #define DIRECTION_PORT_1 H
+  #define DIRECTION_PORT_2 H
+  #define DIRECTION_BIT_0 3
+  #define DIRECTION_BIT_1 3
+  #define DIRECTION_BIT_2 4
+  #define _DIRECTION_BIT(i) DIRECTION_BIT_##i
+  #define DIRECTION_BIT(i) _DIRECTION_BIT(i)
+  #define DIRECTION_DDR(i) _DDR(DIRECTION_PORT_##i)
+  #define _DIRECTION_PORT(i) _PORT(DIRECTION_PORT_##i)
+  #define DIRECTION_PORT(i) _DIRECTION_PORT(i)
+  #define DIRECTION_PIN(i) _PIN(DIRECTION_PORT_##i)
+
+  #define STEPPER_DISABLE_PORT_0 H
+  #define STEPPER_DISABLE_PORT_1 H
+  #define STEPPER_DISABLE_PORT_2 H
+  #define STEPPER_DISABLE_BIT_0 5
+  #define STEPPER_DISABLE_BIT_1 5
+  #define STEPPER_DISABLE_BIT_2 5
+  #define STEPPER_DISABLE_BIT(i) STEPPER_DISABLE_BIT_##i
+  #define STEPPER_DISABLE_DDR(i) _DDR(STEPPER_DISABLE_PORT_##i)
+  #define STEPPER_DISABLE_PORT(i) _PORT(STEPPER_DISABLE_PORT_##i)
+  #define STEPPER_DISABLE_PIN(i) _PIN(STEPPER_DISABLE_PORT_##i)
+
+  #define MIN_LIMIT_PORT_0 H
+  #define MIN_LIMIT_PORT_1 B
+  #define MIN_LIMIT_PORT_2 B
+  #define MIN_LIMIT_BIT_0 6
+  #define MIN_LIMIT_BIT_1 4
+  #define MIN_LIMIT_BIT_2 5
+  #define _MIN_LIMIT_BIT(i) MIN_LIMIT_BIT_##i
+  #define MIN_LIMIT_BIT(i) _MIN_LIMIT_BIT(i)
+  #define MIN_LIMIT_DDR(i) _DDR(MIN_LIMIT_PORT_##i)
+  #define MIN_LIMIT_PORT(i) _PORT(MIN_LIMIT_PORT_##i)
+  #define MIN_LIMIT_PIN(i) _PIN(MIN_LIMIT_PORT_##i)
+
+  #define MAX_LIMIT_PORT_0 H
+  #define MAX_LIMIT_PORT_1 B
+  #define MAX_LIMIT_PORT_2 B
+  #define MAX_LIMIT_BIT_0 6
+  #define MAX_LIMIT_BIT_1 4
+  #define MAX_LIMIT_BIT_2 5
+  #define _MAX_LIMIT_BIT(i) MAX_LIMIT_BIT_##i
+  #define MAX_LIMIT_BIT(i) _MAX_LIMIT_BIT(i)
+  #define MAX_LIMIT_DDR(i) _DDR(MAX_LIMIT_PORT_##i)
+  #define MAX_LIMIT_PORT(i) _PORT(MAX_LIMIT_PORT_##i)
+  #define MAX_LIMIT_PIN(i) _PIN(MAX_LIMIT_PORT_##i)
+
+  #define DISABLE_HW_LIMITS
+
+  #define SPINDLE_ENABLE_DDR      DDRB
+  #define SPINDLE_ENABLE_PORT     PORTB
+  #define SPINDLE_ENABLE_BIT      6
+  #define SPINDLE_DIRECTION_DDR   DDRB
+  #define SPINDLE_DIRECTION_PORT  PORTB
+  #define SPINDLE_DIRECTION_BIT   7
+
+  #define COOLANT_FLOOD_DDR   DDRF
+  #define COOLANT_FLOOD_PORT  PORTF
+  #define COOLANT_FLOOD_BIT   3
+  #define COOLANT_MIST_DDR    DDRF
+  #define COOLANT_MIST_PORT   PORTF
+  #define COOLANT_MIST_BIT    4
+
+  #define CONTROL_DDR       DDRK
+  #define CONTROL_PIN       PINK
+  #define CONTROL_PORT      PORTK
+  #define CONTROL_RESET_BIT         0
+  #define CONTROL_FEED_HOLD_BIT     1
+  #define CONTROL_CYCLE_START_BIT   2
+  #define CONTROL_SAFETY_DOOR_BIT   3
+  #define CONTROL_INT       PCIE2
+  #define CONTROL_INT_vect  PCINT2_vect
+  #define CONTROL_PCMSK     PCMSK2
+  #define CONTROL_MASK      ((1<<CONTROL_RESET_BIT)|(1<<CONTROL_FEED_HOLD_BIT)|(1<<CONTROL_CYCLE_START_BIT)|(1<<CONTROL_SAFETY_DOOR_BIT))
+
+  #define PROBE_DDR       DDRF
+  #define PROBE_PIN       PINF
+  #define PROBE_PORT      PORTF
+  #define PROBE_BIT       5
+  #define PROBE_MASK      (1<<PROBE_BIT)
+
+  #define SPINDLE_PWM_MAX_VALUE     1024.0
+  #ifndef SPINDLE_PWM_MIN_VALUE
+    #define SPINDLE_PWM_MIN_VALUE   1
+  #endif
+  #define SPINDLE_PWM_OFF_VALUE     0
+  #define SPINDLE_PWM_RANGE         (SPINDLE_PWM_MAX_VALUE-SPINDLE_PWM_MIN_VALUE)
+  #define SPINDLE_TCCRA_REGISTER    TCCR5A
+  #define SPINDLE_TCCRB_REGISTER    TCCR5B
+  #define SPINDLE_OCR_REGISTER      OCR5B
+  #define SPINDLE_COMB_BIT          COM5B1
+
+  #define SPINDLE_TCCRA_INIT_MASK ((1<<WGM50) | (1<<WGM51))
+  #define SPINDLE_TCCRB_INIT_MASK ((1<<WGM52) | (1<<WGM53) | (1<<CS51))
+  #define SPINDLE_OCRA_REGISTER   OCR5A
+  #define SPINDLE_OCRA_TOP_VALUE  0x0400
+
+  #define SPINDLE_PWM_DDR   DDRL
+  #define SPINDLE_PWM_PORT  PORTL
+  #define SPINDLE_PWM_BIT   4
+
+#endif
+/*
 #ifdef CPU_MAP_CUSTOM_PROC
   // For a custom pin map or different processor, copy and edit one of the available cpu
   // map files and modify it to your needs. Make sure the defined name is also changed in
